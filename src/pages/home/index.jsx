@@ -51,9 +51,7 @@ const Home = () => {
     getFollowings()
   }, [])
 
-  useEffect(() => {
-    console.log(filteredPosts);
-  }, [filteredPosts])
+
   return (
     <>
       <PostForm />

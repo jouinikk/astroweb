@@ -1,18 +1,13 @@
-import { Routes,Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Profile from "../profile";
-import Post from "../../components/post" 
-import { Grid,Box,Divider } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
-import axios from "axios";
+import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import Home from "../home";
 import TopBar from "../../components/topBar";
 import UserProfile from "../user";
-import { ToastContainer } from "react-toastify";
 import AdminTopBar from "../../components/adminTopBar";
-import Users from "../../users";
+import Users from "../users";
 import Flags from "../flags";
-import { Explore } from "@mui/icons-material";
 import ExplorePage from "../explore";
 const MainPage =()=>{    
     const authCtx = useContext(AuthContext)

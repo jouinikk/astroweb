@@ -53,6 +53,7 @@ const Flags = () => {
                                 user={flag.publication.user}
                                 image={flag.publication.imagePath}
                                 date={flag.publication.createdAt}
+                                deletable={true}
                             />
                         </CardContent>
                     </Card>

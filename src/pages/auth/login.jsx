@@ -16,7 +16,7 @@ import {jwtDecode} from 'jwt-decode';
 import { AuthContext } from '../../context/AuthContext';
 import { useContext } from 'react';
 import { Modal } from '@mui/material';
-import { AppRegistration, LoginOutlined } from '@mui/icons-material';
+import { AppRegistration, LoginOutlined, ReduceCapacity } from '@mui/icons-material';
 import { redirect } from 'react-router-dom';
 import {Alert} from '@mui/material';
 function Copyright(props) {
@@ -46,6 +46,13 @@ export default function SignInSide() {
     const data = new FormData(event.currentTarget);    
     let email =  data.get('email')
     let password = data.get('password')
+    if(email=="" || password=="") {
+      setTimeout(() => {
+         setError(false) 
+      }, 3000);
+      setError(true)
+      return false;
+    } 
     try{
     await axios.post("http://localhost:8080/api/v1/auth/authenticate",{
       "email": email,
@@ -80,6 +87,13 @@ export default function SignInSide() {
   const handleSignUp = async(event)=>{
       event.preventDefault()
       const data = new FormData(event.currentTarget)
+      if(data.get('firstName')=="" || data.get('email')=="" || data.get('password')==""){
+        setTimeout(() => {
+          setErrorRegister(false)
+        }, 3000);
+        setErrorRegister(true)
+        return false;
+      }
       try{
         const response = await axios.post("http://localhost:8080/api/v1/auth/register",{
             "firstName":data.get('firstName'),

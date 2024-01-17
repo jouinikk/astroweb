@@ -1,108 +1,127 @@
 import React, { useContext, useState } from 'react';
-import { Button, Input, Paper, TextField, Typography} from '@mui/material';
+import { Button, Input, Paper, TextField, Typography } from '@mui/material';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import {Alert} from '@mui/material';
+import { Alert } from '@mui/material';
 
 const PostForm = () => {
 
   const [content, setContent] = useState('');
-  const [error,setError] = useState(false);
-  const [posted,setPosted] = useState(false);
-  const [path,setPath] = useState('');
+  const [error, setError] = useState(false);
+  const [posted, setPosted] = useState(false);
+  const [path, setPath] = useState('');
   const handleContentChange = (event) => {
     setContent(event.target.value);
   };
-  const handlePathChange = (event)=>{
+  const handlePathChange = (event) => {
     setPath(event.target.value);
   }
 
   const authCtx = useContext(AuthContext);
 
-  const handleSubmit = () =>{
-    try{
-    axios.post('http://localhost:8080/api/v1/publication/addpub',{
+  const handleSubmit = () => {
+    if (content == "" || path == "") {
+      setTimeout(() => {
+        setError(false)
+      }, 3000);
+      setError(true)
+      return false;
+    }
+
+    try {
+      axios.post('http://localhost:8080/api/v1/publication/addpub', {
         "text": content,
         "user": {
-            "id": authCtx.id,
-            "role": authCtx.role
+          "id": authCtx.id,
+          "role": authCtx.role
         },
-        "imagePath":path
-    }).then((response)=>{
-      if(response.status != 200){
-      // setTimeout(()=>{
-      //   setError(false)
-      // },3000)
-      setError(true)
-       }else{
-      //   setTimeout(()=>{
-      //     setPosted(false)
-      //   },3000)
-        setPosted(true)
+        "imagePath": path
+      }).then((response) => {
+        if (response.status != 200) {
+          // setTimeout(() => {
+          //   setError(false)
+          // }, 3000)
+          setError(true)
+        } else {
+          // setTimeout(() => {
+          //   setPosted(false)
+          // }, 3000)
+          setPosted(true)
+        }
+        setContent('');
+        setPath('');
       }
-      setContent('');
-    }
-    )
-  }catch(e){}
+      )
+    } catch (e) { }
   }
 
   return (
-    <Paper  sx={{    
+    <Paper
+      sx={{
         padding: '10px',
         marginBottom: '4px',
-        mx:'auto', 
+        mx: 'auto',
         width: '55%',
-        alignContent:'center'
-      }}>
+        alignContent: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center', // Center children horizontally
+      }}
+    >
       <Typography variant="h6" gutterBottom>
         Create a New Post
       </Typography>
       <TextField
         sx={{
-            mx:'auto',
-            width: '80%',
-            marginBottom: '4px',
+          width: '60%',
+          marginBottom: '4px',
         }}
         label="Write something..."
         variant="outlined"
         multiline
-        rows= {4}
+        rows={4}
         value={content}
         onChange={handleContentChange}
-      /><br/>              
+      />
       <TextField
         margin="normal"
         required
-        fullWidth
         id="path"
         label="Picture Path"
         name="path"
         value={path}
         autoComplete="path"
         autoFocus
+        sx={{
+          width: '60%',
+          marginBottom: '4px',
+        }}
+        onChange={handlePathChange}
       />
       <Button
-        sx={{
-            marginRight: '4px',
-        }}
         variant="contained"
-        color="primary"                                                                                                                              
+        color="primary"
         onClick={handleSubmit}
+        sx={{
+          marginTop: '4px',
+        }}
       >
         Post
       </Button>
-      {error &&
-         <Alert variant="outlined" severity="error">
-            there has been an error posting
-          </Alert>
-      }
-      {posted &&
-         <Alert variant="outlined" severity="success">
-            Posted Successfully
-          </Alert>
-      }
+      {error && (
+        <Alert variant="outlined" severity="error" sx={{ marginTop: '4px' }}>
+          There has been an error posting.
+        </Alert>
+      )}
+      {posted && (
+        <Alert variant="outlined" severity="success" sx={{ marginTop: '4px' }}>
+          Posted Successfully
+        </Alert>
+      )}
     </Paper>
+
+
   );
 };
 

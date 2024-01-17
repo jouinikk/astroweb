@@ -21,7 +21,7 @@ const PostCard = ({ id, user, text, image, date, flaggable, deletable, onPostDel
   const [comments, setComments] = useState([]);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [newComment, setNewComment] = useState("")
-  const [isLiking,setIsLiking] = useState(false)
+  const [isLiking, setIsLiking] = useState(false)
 
   const toggleComments = () => {
     setCommentsOpen(!commentsOpen);
@@ -72,39 +72,39 @@ const PostCard = ({ id, user, text, image, date, flaggable, deletable, onPostDel
       setComments(response.data)
     })
 
-    await axios.get(`http://localhost:8080/api/v1/publication/hasLikes/${authCtx.id}/${id}`).then((response)=>{
+    await axios.get(`http://localhost:8080/api/v1/publication/hasLikes/${authCtx.id}/${id}`).then((response) => {
       setIsLiking(response.data)
     })
 
   }
 
-  const handleAddComment = async() => {
-    if (newComment=="") {
+  const handleAddComment = async () => {
+    if (newComment == "") {
       alert('you cant add an empty comment')
       return false;
     }
-    await axios.post('http://localhost:8080/api/v1/publication/comment',{
-      userId:authCtx.id,
-      pubId:id,
-      content:newComment
-    }).then((response)=>{
+    await axios.post('http://localhost:8080/api/v1/publication/comment', {
+      userId: authCtx.id,
+      pubId: id,
+      content: newComment
+    }).then((response) => {
       getLikesAndComments();
       setNewComment("");
     })
   }
 
-  const like = async()=>{
-    await axios.post(`http://localhost:8080/api/v1/publication/like`,{
-      userId:authCtx.id,
-      pubId:id
-    }).then(()=>{
+  const like = async () => {
+    await axios.post(`http://localhost:8080/api/v1/publication/like`, {
+      userId: authCtx.id,
+      pubId: id
+    }).then(() => {
       getLikesAndComments();
     })
     console.log("Clicked");
   }
 
-  const unlike = async ()=>{
-    await axios.delete(`http://localhost:8080/api/v1/publication/unlike/${authCtx.id}/${id}`).then(()=>{
+  const unlike = async () => {
+    await axios.delete(`http://localhost:8080/api/v1/publication/unlike/${authCtx.id}/${id}`).then(() => {
       getLikesAndComments();
     })
     console.log("unClicked");
@@ -136,22 +136,19 @@ const PostCard = ({ id, user, text, image, date, flaggable, deletable, onPostDel
             onClick={handleDelete}
           />
           }
-          <Link to={`/profile/${user.id}`}>
-            <Box sx={{
-              display: 'inline-flex'
-            }}>
-              <Avatar src={`${user.profilePic}`} alt={user.firstName} />
-              <Typography sx={{
-                fontWeight: 'bold',
-                marginLeft: '5px',
-                marginTop: 1
-              }} variant="subtitle1">
-                {user.firstName} {user.lastName}
-              </Typography>
-            </Box>
-            <small>{date}</small>
-
-          </Link>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Link to={`/profile/${user.id}`}>
+              <Box sx={{ display: 'inline-flex' }}>
+                <Avatar src={`${user.profilePic}`} alt={user.firstName} />
+                <Typography sx={{ fontWeight: 'bold', marginLeft: '5px', marginTop: 1 }} variant="subtitle1">
+                  {user.firstName} {user.lastName}
+                </Typography>
+              </Box>
+            </Link>
+            <Typography variant="body2" color="textSecondary" sx={{ marginLeft: 'auto', marginRight: '5px' }}>
+              {date}
+            </Typography>
+          </Box>
           <Typography variant="body1">{text}</Typography>
           {/* <Button sx={{
           padding :0,
@@ -161,29 +158,30 @@ const PostCard = ({ id, user, text, image, date, flaggable, deletable, onPostDel
           <AddReaction/>
         </Button>
          */}
-
-          <img src={`${image}`} />
+          <Box sx={{ textAlign: 'center', marginTop: '10px' }}>
+            <img src={`${image}`} alt="Post Image" style={{ maxWidth: '100%' }} />
+          </Box>
           <Box sx={{
             marginTop: "5px"
           }}>
             <hr />
-            {isLiking && 
+            {isLiking &&
               <>
                 <Favorite sx={{
-                  color:colors.red[500]
+                  color: colors.red[500]
                 }}
                   onClick={unlike}
-                /><br/>
+                /><br />
               </>
             }
             {!isLiking &&
-             <>
+              <>
                 <FavoriteBorder sx={{
-                  color:colors.red[500]
+                  color: colors.red[500]
                 }}
-                onClick={like}
-                /><br/>
-             </>
+                  onClick={like}
+                /><br />
+              </>
             }
             <small>
               {likes.length} {likes.length == 1 ? " Like " : " Likes"}
@@ -208,10 +206,10 @@ const PostCard = ({ id, user, text, image, date, flaggable, deletable, onPostDel
                 />
                 <AddCircleOutline
                   sx={{
-                    marginTop:1,
-                    marginLeft:1,
-                    fontSize:30,
-                    color:colors.blue[500]
+                    marginTop: 1,
+                    marginLeft: 1,
+                    fontSize: 30,
+                    color: colors.blue[500]
                   }}
                   onClick={handleAddComment}
                 />
@@ -219,33 +217,19 @@ const PostCard = ({ id, user, text, image, date, flaggable, deletable, onPostDel
 
               <Box>
                 {comments.map((comment, index) => (
-                  <>
+                  <Box key={index} sx={{ display: 'flex', marginTop: '10px', marginLeft: '10px', marginRight: '10px' }}>
                     <Link to={`/profile/${comment.userid.id}`}>
-                      <Box key={index} sx={{
-                        display: 'inline-flex',
-                        marginTop: 2,
-                        marginLeft: 2,
-                        marginRight: 2,
-                      }}>
-                        <Avatar src={comment.userid.profilePic} alt={comment.userid.firstName} />
-                        <Typography sx={{
-                          fontWeight: 'bold',
-                          marginLeft: '5px',
-                          marginTop: 1
-                        }} variant="subtitle1">
-                          {comment.userid.firstName} {comment.userid.lastName}
-                        </Typography>
-                      </Box>
+                      <Avatar src={comment.userid.profilePic} alt={comment.userid.firstName} />
                     </Link>
-                    <Box>
-                      <Typography sx={{
-                        marginLeft: '70px',
-                      }}
-                        variant="body2">
-                        {comment.content}
+                    <Box sx={{ marginLeft: '10px' }}>
+                      <Typography sx={{ fontWeight: 'bold' }}>
+                        <Link to={`/profile/${comment.userid.id}`}>
+                          {comment.userid.firstName} {comment.userid.lastName}
+                        </Link>
                       </Typography>
+                      <Typography>{comment.content}</Typography>
                     </Box>
-                  </>
+                  </Box>
                 ))}
               </Box>
             </Collapse>
